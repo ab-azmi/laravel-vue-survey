@@ -1,0 +1,139 @@
+<template>
+  <div>
+    <div>
+      <img
+        class="mx-auto h-12 w-auto"
+        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+        alt="Your Company"
+      >
+      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+        Register for free
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Or
+        {{ ' ' }}
+        <router-link
+          :to="{name: 'Login'}"
+          href="#"
+          class="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          login
+        </router-link>
+      </p>
+    </div>
+    <form
+      class="mt-8 space-y-6"
+      method="POST"
+      @submit.prevent="register"
+    >
+      <div class="-space-y-px rounded-md shadow-sm">
+        <div>
+          <label
+            for="name"
+            class="sr-only"
+          >Full Name</label>
+          <input
+            id="name"
+            v-model="user.name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required=""
+            class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+            placeholder="Full Name"
+          >
+        </div>
+        <div class="-space-y-px rounded-md shadow-sm">
+          <div>
+            <label
+              for="email-address"
+              class="sr-only"
+            >Email address</label>
+            <input
+              id="email-address"
+              v-model="user.email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required=""
+              class="relative block w-full appearance-none rounded-none  border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              placeholder="Email address"
+            >
+          </div>
+          <div>
+            <label
+              for="password"
+              class="sr-only"
+            >Password</label>
+            <input
+              id="password"
+              v-model="user.password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required=""
+              class="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              placeholder="Password"
+            >
+          </div>
+          <div>
+            <label
+              for="password_confirmation"
+              class="sr-only"
+            >Password Confirm</label>
+            <input
+              id="password_confirmation"
+              v-model="user.password_confirmation"
+              name="password_confirmation"
+              type="password"
+              autocomplete="current-password_confirmation"
+              required=""
+              class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              placeholder="Password Confirm"
+            >
+          </div>
+        </div>
+
+
+        <div>
+          <button
+            type="submit"
+            class="group mt-6 relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <LockClosedIcon
+                class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                aria-hidden="true"
+              />
+            </span>
+            Sign in
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
+
+<script setup>
+import { LockClosedIcon } from '@heroicons/vue/20/solid'
+import store from '../store/index.js';
+import {useRouter} from 'vue-router';
+
+const router = useRouter();
+
+const user = {
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
+}
+
+function register(){
+  //dispatch register action
+  store.dispatch('register', user)
+  .then((res) => {
+    //redirect to dashboard
+    router.push({name: 'Dashboard'})
+  })
+}
+</script>

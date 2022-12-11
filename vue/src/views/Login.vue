@@ -23,9 +23,35 @@
     </div>
     <form
       class="mt-8 space-y-6"
-      action="#"
       method="POST"
+      @submit.prevent="login"
     >
+      <div
+        v-if="errMsg"
+        class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded"
+      >
+        {{ errMsg }}
+        <span
+          class="cursor-pointer flex h-8 w-8 justify-center 
+          items-center transition-colors hover:bg-red-600 rounded-full"
+          @click.prevent="errMsg = ''"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </span>
+      </div> 
       <input
         type="hidden"
         name="remember"
@@ -39,6 +65,7 @@
           >Email address</label>
           <input
             id="email-address"
+            v-model="user.email"
             name="email"
             type="email"
             autocomplete="email"
@@ -54,6 +81,7 @@
           >Password</label>
           <input
             id="password"
+            v-model="user.password"
             name="password"
             type="password"
             autocomplete="current-password"
@@ -64,7 +92,21 @@
         </div>
       </div>
 
-
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input
+            id="remember-me"
+            v-model="user.remember"
+            name="remember-me"
+            type="checkbox"
+            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          >
+          <label
+            for="remember-me"
+            class="ml-2 block text-sm text-gray-900"
+          >Remember me</label>
+        </div>
+      </div>
 
       <div>
         <button
@@ -86,9 +128,27 @@
 
 <script setup>
 import { LockClosedIcon } from '@heroicons/vue/20/solid'
+import store from '../store'
+import {useRouter} from 'vue-router'
+import {ref} from 'vue'
 
+const router = useRouter()
+
+const user = {
+  email: '',
+  password: '',
+  remember: false
+}
+
+const errMsg = ref('')
+
+function login(){
+  store.dispatch('login', user)
+  .then((res) => {
+    router.push({name: 'Dashboard'})
+  })
+  .catch((err) => {
+    errMsg.value = err.response.data.message
+  })
+}
 </script>
-
-<style>
-
-</style>
