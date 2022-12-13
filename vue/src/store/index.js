@@ -36,6 +36,10 @@ const store = createStore({
       data: {},
       token: sessionStorage.getItem("TOKEN"),
     },
+    currentSurvey: {
+      loading: false,
+      data: {},
+    },
     surveys: [...tmpSurveys],
     questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
   },
@@ -43,6 +47,7 @@ const store = createStore({
     logout: (state) => {
       state.user.data = {};
       state.user.token = null;
+      sessionStorage.removeItem("TOKEN");
     },
     setUser: (state, user) => {
       //set user data and token to state
@@ -50,6 +55,13 @@ const store = createStore({
       state.user.token = user.token;
       //set token to local storage
       sessionStorage.setItem("TOKEN", user.token);
+    },
+
+    setCurrentSurvey: (state, survey) => {
+      state.currentSurvey.data = survey.data;
+    },
+    setCurrentSurveyLoading: (state, loading) => {
+      state.currentSurvey.loading = loading;
     },
   },
   actions: {
@@ -70,6 +82,49 @@ const store = createStore({
         commit("logout");
         return res;
       });
+    },
+    saveSurvey({ commit }, survey) {
+      delete survey.image_url;
+      let response;
+      if (survey.id) {
+        //updating survey
+        response = axiosClient
+          .put(`/survey/${survey.id}`, survey)
+          .then((res) => {
+            commit("setCurrentSurvey", res.data);
+            return res;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        //creating survey
+        response = axiosClient
+          .post("/survey", survey)
+          .then((res) => {
+            commit("setCurrentSurvey", res.data);
+            return res;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      return response;
+    },
+    getSurvey({ commit }, id) {
+      commit("setCurrentSurveyLoading", true);
+      return axiosClient
+        .get(`/survey/${id}`)
+        .then((res) => {
+          commit("setCurrentSurvey", res.data);
+          commit("setCurrentSurveyLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setCurrentSurveyLoading", false);
+          throw err;
+        });
     },
   },
   getters: {},

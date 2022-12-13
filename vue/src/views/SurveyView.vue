@@ -1,10 +1,22 @@
 <template>
   <PageComponent>
     <template #header>
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-        {{ model.id ? model.title : 'Create a survey' }}
-      </h1>
+      <div class="flex justify-between">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          {{ route.params.id ? model.title : 'Create a survey' }}
+        </h1>
+        <button v-if="route.params.id"
+                class="py-2 px-3 text-white bg-red-500 rounded-md
+                    hover:bg-red-600"
+                type="button">
+          Delete Survey
+        </button>
+      </div>
     </template>
+    <div v-if="surveyLoading"
+         class="flex justify-center">
+      Loading...
+    </div>
     <form @submit.prevent="saveSurvey">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <!-- Survey Fields -->
@@ -19,9 +31,9 @@
             </label>
             <div class="mt-1 flex items-center">
               <img
-                v-if="model.image"
+                v-if="model.image_url"
                 :alt="model.title"
-                :src="model.image"
+                :src="model.image_url"
                 class="w-64 h-48 object-cover"
               >
               <span
@@ -54,6 +66,7 @@
                   class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer"
                   name=""
                   type="file"
+                  @change="onImageChoose"
                 >
                 Change
               </button>
@@ -199,27 +212,50 @@
 <script setup>
 import PageComponent from '../components/PageComponent.vue'
 import QuestionEditor from "../components/editor/QuestionEditor.vue";
-import {ref} from 'vue'
+import {ref, watch, computed} from 'vue'
 import store from '../store'
-import {useRoute} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import {v4 as uuidv4} from 'uuid'
 
 const route = useRoute()
+const router = useRouter()
+
+const surveyLoading = computed(() => store.state.currentSurvey.loading)
 
 let model = ref({
   title: '',
   status: false,
   description: null,
-  image: null,
+  image_url: null,
   expire_date: null,
   questions: [],
 })
 
 if (route.params.id) {
   //if there is param id, then find that survey from store
-  model.value = store.state.surveys.find(
-    (s) => s.id === parseInt(route.params.id)
-  )
+  store.dispatch('getSurvey', route.params.id)
+}
+
+//watch for changes in current survey
+watch(() => store.state.currentSurvey.data,
+  (newVal, oldVal) => {
+    model.value = {
+      ...JSON.parse(JSON.stringify(newVal)),
+      status: newVal.status !== 'draft',
+    };
+  });
+
+function onImageChoose(ev) {
+  const file = ev.target.files[0];
+  const reader = new FileReader();
+  reader.onload = () => {
+    //the field to send on backend and apply validator
+    model.value.image = reader.result;
+
+    //the field to display here
+    model.value.image_url = reader.result;
+  }
+  reader.readAsDataURL(file)
 }
 
 function addQuestion(index) {
@@ -248,4 +284,16 @@ function questionChange(question) {
     return q;
   })
 }
+
+function saveSurvey() {
+
+  store.dispatch('saveSurvey', model.value)
+    .then(({data}) => {
+      router.push({name: 'SurveyView', params: {id: data.data.id}});
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
 </script>
