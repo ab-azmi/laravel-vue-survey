@@ -1,35 +1,6 @@
 import { createStore } from "vuex";
 import axiosClient from "../axios.js";
 
-const tmpSurveys = [
-  {
-    id: 100,
-    title: "Survey 1",
-    slug: "survey-1",
-    status: "draft",
-    image: "https://picsum.photos/200/300",
-    description: "This is a survey description",
-    created_at: "2021-05-01 12:00:00",
-    updated_at: "2021-05-01 12:00:00",
-    expire_date: "2022-05-01 12:00:00",
-    questions: [
-      {
-        id: 1,
-        type: "select",
-        question: "What is your favorite color?",
-        description: null,
-        data: {
-          options: [
-            { uuid: "1", text: "Red" },
-            { uuid: "2", text: "Blue" },
-            { uuid: "3", text: "Yellow" },
-          ],
-        },
-      },
-    ],
-  },
-];
-
 const store = createStore({
   state: {
     user: {
@@ -40,8 +11,17 @@ const store = createStore({
       loading: false,
       data: {},
     },
-    surveys: [...tmpSurveys],
+    surveys: {
+      loading: false,
+      links: {},
+      data: [],
+    },
     questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
+    notification: {
+      show: false,
+      message: null,
+      type: null,
+    },
   },
   mutations: {
     logout: (state) => {
@@ -62,6 +42,21 @@ const store = createStore({
     },
     setCurrentSurveyLoading: (state, loading) => {
       state.currentSurvey.loading = loading;
+    },
+    setSurveys: (state, surveys) => {
+      state.surveys.links = surveys.meta.links;
+      state.surveys.data = surveys.data;
+    },
+    setSurveysLoading: (state, loading) => {
+      state.surveys.loading = loading;
+    },
+    notify: (state, { message, type }) => {
+      state.notification.show = true;
+      state.notification.message = message;
+      state.notification.type = type;
+      setTimeout(() => {
+        state.notification.show = false;
+      }, 3000);
     },
   },
   actions: {
@@ -125,6 +120,19 @@ const store = createStore({
           commit("setCurrentSurveyLoading", false);
           throw err;
         });
+    },
+    deleteSurvey({ commit }, id) {
+      return axiosClient.delete(`/survey/${id}`);
+    },
+    getSurveys({ commit }, { url = null } = {}) {
+      url = url || "/survey";
+
+      commit("setSurveysLoading", true);
+      return axiosClient.get(url).then((res) => {
+        commit("setSurveys", res.data);
+        commit("setSurveysLoading", false);
+        return res;
+      });
     },
   },
   getters: {},

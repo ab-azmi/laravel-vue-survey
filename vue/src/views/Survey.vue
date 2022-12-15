@@ -11,84 +11,54 @@
         >
           Add Survey
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
             class="w-6 h-6 -mt-1 inline-block"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              d="M12 4.5v15m7.5-7.5h-15"
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
             />
           </svg>
         </router-link>
       </div>
     </template>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-      <div
-        v-for="survey in surveys"
-        :key="survey.id"
-        class="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray-50 h-[470px]"
-      >
-        <img
-          :src="survey.image"
-          alt=""
-          class="w-full h-48 object-cover"
-        >
-        <h4 class="mt-4 text-lg font-bold">
-          {{ survey.title }}
-        </h4>
-        <div
-          class="overflow-hidden flex-1"
-          v-html="survey.description"
+    <div v-if="surveys.loading"
+         class="flex justify-center">Loading...
+    </div>
+    <div v-else>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <SurveyListItem
+          v-for="(survey, index) in surveys.data"
+          :key="survey.id"
+          :style="{animationDelay: `${index * 0.1}s`}"
+          :survey="survey"
+          class="opacity-0 animate-fade-in-down"
+          @delete="deleteSurvey(survey)"
         />
-        <div class="flex justify-between items-center mt-3">
-          <router-link
-            :to="{name: 'SurveyView', params: {id: survey.id}}"
-            class="flex py-2 px-4 border border-transparent text-sm text-white rounded-md bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Edit
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-4 h-4 ml-2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-              />
-            </svg>
-          </router-link>
-          <button
-            v-if="survey.id"
-            type="button"
-            class="flex py-2 px-4 border border-transparent text-sm text-white rounded-md bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            @click="deleteSurvey(survey)"
-          >
-            Delete
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-4 h-4 ml-2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-              />
-            </svg>
-          </button>
-        </div>
+      </div>
+      <!--pagination-->
+      <!--end pagination-->
+      <div class="flex justify-center mt-5">
+        <nav aria-label="Pagination"
+             class="relative z-0 inline-flex justify-center rounded-md shadow">
+          <a v-for="(link, i) of surveys.links"
+             :key="i"
+             :class="[link.active
+              ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+              : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+              i === 0 ? 'rounded-l-md' : '',
+              i === surveys.links.length - 1 ? 'rounded-r-md' : '',]"
+             :disabled="!link.url"
+             class="relative inline-flex items-center px-4 py-2 border text-sm
+                    font-medium whitespace-nowrap"
+             v-html="link.label"
+             @click.prevent="getForPage(link)"></a>
+        </nav>
       </div>
     </div>
   </PageComponent>
@@ -98,13 +68,26 @@
 import PageComponent from '../components/PageComponent.vue';
 import store from '../store'
 import {computed} from 'vue'
+import SurveyListItem from '../components/SurveyListItem.vue'
 
 const surveys = computed(() => store.state.surveys)
 
-function deleteSurvey(survey){
-  if(confirm('Yakin??')){
-    //delete
+store.dispatch('getSurveys')
+
+function deleteSurvey(survey) {
+  if (confirm('Yakin??')) {
+    store.dispatch('deleteSurvey', survey.id)
+      .then(() => {
+        store.dispatch('getSurveys')
+      })
   }
+}
+
+function getForPage(link) {
+  if (!link.url || link.active) {
+    return;
+  }
+  store.dispatch('getSurveys', {url: link.url})
 }
 </script>
 

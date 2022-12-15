@@ -8,7 +8,8 @@
         <button v-if="route.params.id"
                 class="py-2 px-3 text-white bg-red-500 rounded-md
                     hover:bg-red-600"
-                type="button">
+                type="button"
+                @click="deleteSurvey()">
           Delete Survey
         </button>
       </div>
@@ -17,7 +18,7 @@
          class="flex justify-center">
       Loading...
     </div>
-    <form @submit.prevent="saveSurvey">
+    <form class="animate-fade-in-down" @submit.prevent="saveSurvey">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <!-- Survey Fields -->
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -289,11 +290,27 @@ function saveSurvey() {
 
   store.dispatch('saveSurvey', model.value)
     .then(({data}) => {
+      store.commit('notify', {
+        type: 'success',
+        message: 'Survey saved successfully'
+      })
       router.push({name: 'SurveyView', params: {id: data.data.id}});
     })
     .catch((err) => {
       console.log(err);
     });
+}
+
+function deleteSurvey() {
+  if (confirm('Are you sure?')) {
+    store.dispatch('deleteSurvey', model.value.id)
+      .then(() => {
+        router.push({name: 'Surveys'});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
 
 </script>

@@ -10,9 +10,9 @@
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <img
+                alt="Your Company"
                 class="h-8 w-8"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                alt="Your Company"
               >
             </div>
             <div class="hidden md:block">
@@ -20,14 +20,14 @@
                 <router-link
                   v-for="item in navigation"
                   :key="item.name"
-                  :to="item.to"
-                  active-class="bg-gray-900 text-white"
                   :class="[
                     $route.name === item.to.name
                       ? ''
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'px-3 py-2 rounded-md text-sm font-medium',
                   ]"
+                  :to="item.to"
+                  active-class="bg-gray-900 text-white"
                 >
                   {{ item.name }}
                 </router-link>
@@ -47,9 +47,9 @@
                   >
                     <span class="sr-only">Open user menu</span>
                     <img
+                      alt=""
                       class="h-8 w-8 rounded-full"
                       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
                     >
                   </MenuButton>
                 </div>
@@ -85,13 +85,13 @@
               <span class="sr-only">Open main menu</span>
               <Bars3Icon
                 v-if="!open"
-                class="block h-6 w-6"
                 aria-hidden="true"
+                class="block h-6 w-6"
               />
               <XMarkIcon
                 v-else
-                class="block h-6 w-6"
                 aria-hidden="true"
+                class="block h-6 w-6"
               />
             </DisclosureButton>
           </div>
@@ -103,14 +103,14 @@
           <router-link
             v-for="item in navigation"
             :key="item.name"
-            :to="item.to"
-            active-class="bg-gray-900 text-white"
             :class="[
               $route.name === item.to.name
                 ? ''
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
             ]"
+            :to="item.to"
+            active-class="bg-gray-900 text-white"
           >
             {{ item.name }}
           </router-link>
@@ -119,9 +119,9 @@
           <div class="flex items-center px-5">
             <div class="flex-shrink-0">
               <img
+                alt=""
                 class="h-10 w-10 rounded-full"
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
               >
             </div>
             <div class="ml-3">
@@ -135,8 +135,8 @@
           </div>
           <div class="mt-3 space-y-1 px-2">
             <DisclosureButton
-              class="block rounded-md cursor-pointer px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
               as="a"
+              class="block rounded-md cursor-pointer px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
               @click="logout"
             >
               Sign Out
@@ -146,7 +146,8 @@
       </DisclosurePanel>
     </Disclosure>
 
-    <router-view />
+    <router-view/>
+    <Notification/>
   </div>
 </template>
 
@@ -164,22 +165,24 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/vue";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import {Bars3Icon, BellIcon, XMarkIcon} from "@heroicons/vue/24/outline";
+import Notification from "./Notification.vue";
 
 const store = useStore();
 const user = computed(() => store.state.user.data);
 
 const navigation = [
-  { name: "Dashboard", to: {name: 'Dashboard'} },
-  { name: "Surveys", to: {name: 'Surveys'} },
+  {name: "Dashboard", to: {name: 'Dashboard'}},
+  {name: "Surveys", to: {name: 'Surveys'}},
 ];
 
 const router = useRouter();
-function logout(){
+
+function logout() {
   store.dispatch('logout')
-  .then(() =>{
-    router.push({name: 'Login'});
-  })
+    .then(() => {
+      router.push({name: 'Login'});
+    })
 }
 
 </script>
