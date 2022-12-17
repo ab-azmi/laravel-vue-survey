@@ -14,7 +14,7 @@
       class="overflow-hidden flex-1"
       v-html="survey.description"
     />
-    <div class="flex justify-between items-center mt-3">
+    <div class="flex justify-between gap-x-3 items-center mt-3">
       <router-link
         :to="{name: 'SurveyView', params: {id: survey.id}}"
         class="flex py-2 px-4 border border-transparent text-sm text-white rounded-md bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -35,15 +35,27 @@
           />
         </svg>
       </router-link>
+      <a :href="`/view/survey/${survey.slug}`"
+         class="h-8 w-8 flex items-center justify-center rounded-full
+            border border-transparent text-sm text-indigo-500 focus:ring-2
+             focus:ring-offset-2 focus:ring-indigo-500"
+         target="_blank">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+      </a>
       <button
         v-if="survey.id"
-        class="flex py-2 px-4 border border-transparent text-sm text-white rounded-md bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+        class="flex h-8 w-8 border border-transparent text-sm text-red-500 hover:text-red-700"
         type="button"
         @click="emit('delete', survey)"
       >
-        Delete
         <svg
-          class="w-4 h-4 ml-2"
+          class="w-6 h-6"
           fill="none"
           stroke="currentColor"
           stroke-width="1.5"

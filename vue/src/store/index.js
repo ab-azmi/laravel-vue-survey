@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import axiosClient from "../axios.js";
 
 const store = createStore({
+  // STATE
   state: {
     user: {
       data: {},
@@ -22,7 +23,12 @@ const store = createStore({
       message: null,
       type: null,
     },
+    dashboard: {
+      loading: false,
+      data: {},
+    },
   },
+  // MUTATIONS
   mutations: {
     logout: (state) => {
       state.user.data = {};
@@ -58,7 +64,14 @@ const store = createStore({
         state.notification.show = false;
       }, 3000);
     },
+    setDashboardLoading: (state, loading) => {
+      state.dashboard.loading = loading;
+    },
+    setDashboardData: (state, data) => {
+      state.dashboard.data = data;
+    },
   },
+  // ACTIONS
   actions: {
     register({ commit }, user) {
       return axiosClient.post("/register", user).then(({ data }) => {
@@ -133,6 +146,37 @@ const store = createStore({
         commit("setSurveysLoading", false);
         return res;
       });
+    },
+    getSurveyBySlug({ commit }, slug) {
+      commit("setCurrentSurveyLoading", true);
+      return axiosClient
+        .get(`/survey-by-slug/${slug}`)
+        .then((res) => {
+          commit("setCurrentSurvey", res.data);
+          commit("setCurrentSurveyLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setCurrentSurveyLoading", false);
+          throw err;
+        });
+    },
+    saveSurveyAnswer({ commit }, { surveyId, answers }) {
+      return axiosClient.post(`/survey/${surveyId}/answer`, { answers });
+    },
+    getDashboardData({ commit }) {
+      commit("setDashboardLoading", true);
+      return axiosClient
+        .get("/dashboard")
+        .then((res) => {
+          commit("setDashboardData", res.data);
+          commit("setDashboardLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setDashboardLoading", false);
+          return err;
+        });
     },
   },
   getters: {},

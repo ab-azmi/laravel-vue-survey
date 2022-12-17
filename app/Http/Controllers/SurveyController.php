@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSurveyAnswerRequest;
 use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
+use App\Models\SurveyAnswer;
 use App\Models\SurveyQuestion;
+use App\Models\SurveyQuestionAnswer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
@@ -129,6 +132,11 @@ class SurveyController extends Controller
         return new SurveyResource($survey);
     }
 
+    public function getSurveyBySlug(Survey $survey)
+    {
+        return new SurveyResource($survey);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -235,6 +243,32 @@ class SurveyController extends Controller
         ]);
 
         return $question->update($validator->validated());
+    }
+
+    public function storeAnswer(StoreSurveyAnswerRequest $request, Survey $survey)
+    {
+        $validated = $request->validated();
+        $surveyAnswer = SurveyAnswer::create([
+            'survey_id' => $survey->id,
+            'start_date' => date('Y-m-d H:i:s'),
+            'end_date' => date('Y-m-d H:i:s'),
+        ]);
+
+        foreach ($validated['answers'] as $questionId => $answer) {
+            $question = SurveyQuestion::where(['id' => $questionId, 'survey_id' => $survey->id])->get();
+            if (!$question) {
+                return response('invalid question id', 400);
+            }
+
+            $data = [
+                'survey_answer_id' => $surveyAnswer->id,
+                'survey_question_id' => $questionId,
+                'answer' => is_array($answer) ? json_encode($answer) : $answer,
+            ];
+
+            SurveyQuestionAnswer::create($data);
+        }
+        return response('success', 201);
     }
 
 }

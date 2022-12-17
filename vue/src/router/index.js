@@ -6,6 +6,7 @@ import DefaultLayout from "../components/DefaultLayout.vue";
 import Survey from "../views/Survey.vue";
 import SurveyView from "../views/SurveyView.vue";
 import AuthLayout from "../components/AuthLayout.vue";
+import SurveyPublicView from "../views/SurveyPublicView.vue";
 import store from "../store";
 
 const routes = [
@@ -55,6 +56,11 @@ const routes = [
         component: Register,
       },
     ],
+  },
+  {
+    path: "/view/survey/:slug",
+    name: "SurveyPublicView",
+    component: SurveyPublicView,
   },
 ];
 
