@@ -19,7 +19,7 @@ class SurveyAnswerResource extends JsonResource
             'id' => $this->id,
             'survey' => new SurveyResource($this->survey),
             'start_date' => $this->start_date,
-            'end_date' => Carbon::parse($this->end_date)->format('d-m-Y H:i:s'),
+            'end_date' => Carbon::parse($this->end_date)->format('D F Y, H:i a'),
         ];
     }
 }

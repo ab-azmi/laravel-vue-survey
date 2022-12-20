@@ -22,8 +22,8 @@ class SurveyResourceDashboard extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'status' => $this->status !== 'draft',
-            'expire_date' => $this->expire_date,
-            'created_at' => Carbon::parse($this->created_at)->format('d-m-Y H:i:s'),
+            'expire_date' => Carbon::parse($this->expire_date)->diffForHumans(),
+            'created_at' => Carbon::parse($this->created_at)->format('D F Y, H:i a'),
             'questions' => $this->questions->count(),
             'answers' => $this->answers->count(),
         ];
