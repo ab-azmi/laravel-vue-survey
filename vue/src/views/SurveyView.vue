@@ -19,9 +19,9 @@
       Loading...
     </div>
     <form class="animate-fade-in-down" @submit.prevent="saveSurvey">
-      <div class="shadow sm:rounded-md sm:overflow-hidden">
+      <div class=" sm:overflow-hidden">
         <!-- Survey Fields -->
-        <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+        <div class="px-4 sm:rounded-md py-5 shadow bg-white space-y-6 sm:p-6">
           <!-- Image -->
           <div>
             <label
@@ -147,16 +147,26 @@
                 class="block text-sm font-medium text-gray-700"
                 for="expire_date"
               >
-                Something
+                Active
               </label>
             </div>
           </div>
           <!-- End Status -->
+          <!-- Submit button -->
+          <div class="flex justify-end">
+            <button
+              class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+          <!-- End Submit button -->
         </div>
         <!-- End Survey Fields -->
 
         <!-- Survey questions -->
-        <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+        <div class="px-4 py-5 sm:rounded-md shadow bg-white mt-5 space-y-6 sm:p-6">
           <h3 class="text-2xl font-semibold flex items-center justify-between">
             Questions
             <button
@@ -195,17 +205,8 @@
         </div>
         <!-- End Survey questions -->
 
-        <!-- Submit button -->
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-          <button
-            class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            type="submit"
-          >
-            Save
-          </button>
-        </div>
-        <!-- End Submit button -->
       </div>
+
     </form>
   </PageComponent>
 </template>
