@@ -1,38 +1,33 @@
-<img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+<img src="https://github.com/ab-azmi/laravel-vue-survey/blob/main/public/github/dashboard.PNG" width="400" alt="Laravel Logo">
+<img src="https://github.com/ab-azmi/laravel-vue-survey/blob/main/public/github/form.PNG" width="400" alt="Laravel Logo">
 
 ## About this project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Laravel survey is a web app that take advantage of Laravel backend and VueJS reactive frontend. This web app uses reusable component to generate
+multiple different column of form. Laravel survey also have authentication feature that allow user to manage their own surveys. Some of the functionality
+that this web app has including:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Create and manage surveys.
+- Monitor surveys through simple dashboard.
+- Provide multiple type of input, like text, radio, checkbox, and so on.
+- Add picture to the survey to make it more attractive.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+More useful functionality may added later.
 
 ## Tools
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- **[Laravel](https://laravel.com)**
+- **[VueJS](https://vuejs.org)**
+- **[Vuex](https://vuex.vuejs.org)**
+- **[Vue Router](https://router.vuejs.org)**
+- **[Hero Icons](https://heroicons.com)**
+- **[Tailwind CSS](https://tailwindcss.com)**
+- **[ViteJS](https://vitejs.dev)**
 
 ## Thanks to
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Thank you to [Codeholic](https://www.youtube.com/@TheCodeholic) for providing this course about how to build a survey app using
+Laravel and VueJS. Please check out his Youtube Channel
 
 ## License
 
