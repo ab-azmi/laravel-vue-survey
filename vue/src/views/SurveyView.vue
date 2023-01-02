@@ -280,9 +280,12 @@ function deleteQuestion(question) {
 
 function questionChange(question) {
   model.value.questions = model.value.questions.map(q => {
+    //change the question in the model array
     if (q.id === question.id) {
+      //if the question is the same, then change it
       return JSON.parse(JSON.stringify(question));
     }
+    //if not, then return the question as it is
     return q;
   })
 }

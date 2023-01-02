@@ -141,11 +141,17 @@ const store = createStore({
       url = url || "/survey";
 
       commit("setSurveysLoading", true);
-      return axiosClient.get(url).then((res) => {
-        commit("setSurveys", res.data);
-        commit("setSurveysLoading", false);
-        return res;
-      });
+      return axiosClient
+        .get(url)
+        .then((res) => {
+          commit("setSurveys", res.data);
+          commit("setSurveysLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setSurveysLoading", false);
+          throw err;
+        });
     },
     getSurveyBySlug({ commit }, slug) {
       commit("setCurrentSurveyLoading", true);
